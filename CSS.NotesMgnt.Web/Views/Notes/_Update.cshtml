@@ -1,0 +1,52 @@
+﻿@using CSC.NotesMgnt.Domain.Entities
+@using CSC.NotesMgnt.Web.Models
+@model CSC.NotesMgnt.Application.DTOs.NoteDTO
+
+<form asp-action="Update" id="myUpdateNoteForm_@Model.Id" class="updateForm">
+    <input asp-for="Id" class="form-control" hidden value="@Model.Id" />
+    <div class="col-12 mb-4" id="card_@Model.Id">
+        <div class="card ">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <label><b>Title:</b></label>
+                    <h5 class="mb-0" style="width:80% !important">
+                    
+                    <label id="lblTitle_@Model.Id" class="lblCard lblCardTitle" data-id="@Model.Id" onclick="showTitleInput(@Model.Id)">@Model.Title</label>
+                    <input id="txtTitle_@Model.Id" asp-for="Title" class="form-control txtCard txtCardTitle" data-id="@Model.Id" type="text" value="@Model.Title" hidden>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </h5>
+                @* <small>Created On @item.CreatedDate.ToString("g")</small> *@
+                <div>
+                    <button id="btnUpdate_@Model.Id" class="btn btn-sm btn-info btnUpdate" >Update</button>
+                    <button id="btnDelete_@Model.Id" class="btn btn-sm btn-danger btnDelete" data-id="@Model.Id">Delete</button>
+                </div>
+            </div>
+            <div class="card-body" style="background-color:@Utility.GetPriorityColor(@Model.Priority)">
+                <div class="form-group col-4 mb-lg-4">
+                    <label><b>Priority :</b></label>
+                <select asp-for="Priority" class="form-control" id="lstPriority_@Model.Id">
+                    <option value="">Select Priority</option>
+                    @foreach (var priorityItem in @Model.PriorityList)
+                    {
+                        if (priorityItem.Value == Enum.GetName(typeof(Priority), Model.Priority))
+                        {
+                            <option value="@priorityItem.Key" selected>@priorityItem.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@priorityItem.Key">@priorityItem.Value</option>
+
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>@* onclick="UpdateNote(@Model.Id)" onclick="DeleteNote(@Model.Id)" *@
+                </div>
+                <div class="form-group">
+                    <label><b>Note :</b></label>
+                    <p id="lblNote_@Model.Id" class="card-text lblCard" data-id="@Model.Id" onclick="showTextArea(@Model.Id)">@Html.Raw(Model.NoteText?.Replace(Environment.NewLine, "<br />"))</p>
+                <textarea asp-for="NoteText" id="txtNote_@Model.Id" data-id="@Model.Id" class="form-control col-12 card-text txtCard txtCardNote" hidden>@Model.NoteText</textarea>
+                <span asp-validation-for="NoteText" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,55 @@
+﻿@using CSC.NotesMgnt.Domain.Entities
+@model CSC.NotesMgnt.Application.DTOs.NoteDTO
+
+<form asp-action="Create" id="myAddNoteForm" hidden>
+    <div class="col-12 mb-4" id="card card-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="Id" class="form-control" type="hidden" />
+        <div class="card ">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Title:
+                <h5 class="mb-0" style="width:80% !important">
+                    <input id="txtTitle" asp-for="Title" class="form-control txtCard txtCardTitle" type="text" placeholder="Enter Title" value="">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </h5>
+                
+                <div>
+                    <button id="btnAdd" class="btn btn-sm btn-info btnAdd">Add</button>
+                    <button id="btnCancel" class="btn btn-sm btnCancel">Cancel</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group col-4 mb-lg-4">
+                    <label>Priority :</label>
+                <select asp-for="Priority" id="lstPriority" class="form-control">
+                    <option value="">Select Priority</option>
+                    @foreach (var priorityItem in @Model.PriorityList)
+                    {
+                        if (priorityItem.Value == Enum.GetName(typeof(Priority), Model.Priority))
+                        {
+                            <option value="@priorityItem.Key" selected>@priorityItem.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@priorityItem.Key">@priorityItem.Value</option>
+
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Note :</label>
+                <textarea asp-for="NoteText" id="txtNote" class="form-control col-12 card-text txtCard txtCardNote" placeholder="Enter Text"></textarea>
+                <span asp-validation-for="NoteText" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@* @section Scripts {
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} *@

@@ -1,0 +1,151 @@
+﻿@using CSC.NotesMgnt.Domain.Entities
+@using CSC.NotesMgnt.Web.Models
+@model CSC.NotesMgnt.Application.DTOs.UpdateNotesDTO
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Notes</h1>
+
+<p>
+    <a id="lnkAddNote" href="#">Create New</a>
+</p>
+<div class="container" id="card-container">
+    <div id="createNoteView"><partial name="_Create" model="Model.Note" /></div>
+    
+@foreach (var item in Model.Notes) 
+{
+        <partial name="_Update" model="item" />
+}
+</div>
+
+@section Scripts {
+    <script type="text/javascript" >
+        $( document ).ready(function(e) {
+           var currentForm = undefined;
+            $('#myAddNoteForm').load('@Url.Action("_Create", "Notes")', function () {
+                
+                $.validator.unobtrusive.parse('#myAddNoteForm');
+            });
+
+            
+            $('#lnkAddNote').on('click', function() {
+                $('#myAddNoteForm').removeAttr('hidden');
+                
+                 e.preventDefault();
+            });
+
+            $('#btnCancel').on('click', function(e) {
+                e.preventDefault();
+                $('#myAddNoteForm').attr('hidden', 'hidden');
+                
+                
+            });
+
+            $('.txtCardTitle').on('keyup', function() {
+                var inputValue = $(this).val(); 
+                const itemId = $(this).data('id');
+                $('#lblTitle_' + itemId).text(inputValue);
+            });
+
+            $('.txtCardNote').on('keyup', function() {
+                var inputValue = $(this).val();
+                const itemId = $(this).data('id');
+                $('#lblNote_' + itemId).text(inputValue);
+            });
+
+            $('.btnDelete').on('click', function(e) {
+                e.preventDefault();                
+                const itemId = $(this).data('id');
+                var confirmation = confirm('Are you sure?');
+
+                  if (confirmation)
+                  {
+                      $.ajax({
+                          url: '@Url.Action("Delete", "Notes")',
+                          type: 'POST',
+                           data: { id: itemId },
+                          success: function (result) {
+                              if (result.success) {
+                                   $('#card_' + itemId).remove();
+                              } else {
+                                  alert(result.message);
+                              }
+                          },
+                          error: function () {
+                              alert('An error occurred.');
+                          }
+                      });
+                  }
+            });
+        });
+        function showTextArea(id)
+        {
+              // $(".lblCard").removeAttr('hidden');
+              //       $(".txtCard").attr('hidden', 'hidden');
+
+                    $("#txtNote_" + id).removeAttr('hidden');
+                      $("#lblNote_" + id).attr('hidden', 'hidden');
+        }
+
+        function showTitleInput(id)
+        {
+              // $(".lblCard").removeAttr('hidden');
+              //        $(".txtCard").attr('hidden', 'hidden');
+                    $("#txtTitle_" + id).removeAttr('hidden');
+                     $("#lblTitle_" + id).attr('hidden', 'hidden');
+        }
+
+        function UpdateTitleInput(id)
+        {
+            $("#lblTitle_" + id).text($("#txtTitle_" + id).val());
+        }
+
+        function UpdateNoteInput(id)
+        {
+            $("#lblNote_" + id).text($("#txtNote_" + id).val());
+        }
+
+         function DeleteNote(id)
+         {
+              
+         }
+
+          function UpdateNote(id)
+          {
+
+                  let note = {
+                       id :  id,
+                       title :  $("#txtTitle_" + id).val(),
+                       noteText :  $("#txtNote_" + id).val(),
+                        priority :  $("#lstPriority_" + id).val(),
+                  }
+
+                   $.ajax({
+                       url: '@Url.Action("Update", "Notes")',
+                       type: 'POST',
+                         data: note,
+                       success: function (result) {
+                           if (result.success) {
+                               $(".lblCard").removeAttr('hidden');
+                                $(".txtCard").attr('hidden', 'hidden');
+                                alert(result.message);
+                                location.reload();
+                           } else {
+                               alert(result.message);
+                           }
+                       },
+                       error: function () {
+                           alert('An error occurred.');
+                       }
+                   });
+               
+          }
+         
+    </script>
+     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}
