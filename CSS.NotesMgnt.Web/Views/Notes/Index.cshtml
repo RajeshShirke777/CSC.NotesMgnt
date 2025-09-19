@@ -14,11 +14,17 @@
 </p>
 <div class="container" id="card-container">
     <div id="createNoteView"><partial name="_Create" model="Model.Note" /></div>
-    
-@foreach (var item in Model.Notes) 
-{
-        <partial name="_Update" model="item" />
-}
+
+ @if(Model.Notes.Count > 0){
+    foreach (var item in Model.Notes) 
+    {
+            <partial name="_Update" model="item" />
+        }
+    }
+    else
+    {
+        <div>0 notes found. Please create new </div>
+    }
 </div>
 
 @section Scripts {

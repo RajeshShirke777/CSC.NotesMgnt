@@ -18,7 +18,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BaseDbContext>(options =>
  {
-     options.UseSqlServer("Data Source=DESKTOP-V6PM2L6\\SQLEXPRESS;Initial Catalog=NotesDB;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=True");
+     options.UseSqlServer(builder.Configuration.GetConnectionString("NotesDB"));
  }
  );
 

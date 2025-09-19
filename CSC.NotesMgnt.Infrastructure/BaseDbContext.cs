@@ -12,7 +12,10 @@ namespace CSC.NotesMgnt.Infrastructure
     {
         public DbSet<Note> Notes { get; set; }
 
-        public BaseDbContext(DbContextOptions<BaseDbContext> options) : base(options) { }
+        public BaseDbContext(DbContextOptions<BaseDbContext> options) : base(options) 
+        {
+            this.Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
